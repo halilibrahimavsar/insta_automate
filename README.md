@@ -3,5 +3,5 @@ Just trying to automate anything like follow and unfollow
 
 And
 
-project will be developed...
+project will be develop...
 
