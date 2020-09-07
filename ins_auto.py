@@ -10,8 +10,6 @@ import os
 
 chrome_path = "C:/Users/avsar/OneDrive/Masaüstü/Chrome-Driver/chromedriver"
 
-
-
 def headles_for_linux():
     pass
 
@@ -28,15 +26,12 @@ def headless_for_windows():
         return chrome_opt
 
 
-def headles_activate():
-    headless_activate = True
-    
-
-
-
 class Insta_automate:
     def __init__(self, username, passwd):
         self.username, self.passwd = username, passwd
+
+        self.follow_count = 10
+
         self.open_instagram()
         self.login()
 
@@ -44,10 +39,9 @@ class Insta_automate:
         self.brows = Chrome(executable_path=chrome_path, chrome_options=headless_for_windows()) if os.name == "nt" else Firefox()
         self.brows.get("https://www.instagram.com/")
         self.brows.implicitly_wait(20)
-        self.find_username =  self.brows.find_element_by_name("username")
-        self.find_passwd = self.brows.find_element_by_name("password")
-        self.find_username.send_keys(self.username)
-        self.find_passwd.send_keys(self.passwd)
+        self.find_username =  self.brows.find_element_by_name("username").send_keys(self.username)
+        self.find_passwd = self.brows.find_element_by_name("password").send_keys(self.passwd)
+
     
     def login(self):
         self.login_but = self.brows.find_element_by_xpath("/html/body/div[1]/section/main/article/div[2]/div[1]/div/form/div/div[3]/button/div").click()
@@ -67,50 +61,43 @@ class Insta_automate:
 
         def follow():
             self.click_follow = self.brows.find_element_by_xpath("/html/body/div[1]/section/main/div/header/section/div[1]/div[2]/div/span/span[1]/button").click()
+            print("[+] Folloved    > {}".format(seek_name))
             self.delay(7)
-            print("[+] Folloved      ")
 
         def unfollow():
             self.click_unfollow = self.brows.find_element_by_xpath("/html/body/div[1]/section/main/div/header/section/div[1]/div[3]/div/span/span[1]/button/div/span").click()
             self.send_enter_to_notfy = self.brows.find_element_by_xpath("/html/body/div[4]/div/div/div/div[3]/button[1]")
             self.send_enter_to_notfy.send_keys(Keys.ENTER)
+            print("[+] Unfolloved  > {}".format(seek_name))
             self.delay(3)
-            print("[+] Unfolloved     ")
-        
-        self.follow_count = int(input("How much follow each of loop : "))
-        self.break_count = int(input("Break time (loop count) : "))
-        self.break_time_delay = int(input("Break time delay (loop count delay[recommanded 500]): "))
-
 
         try:
-            unfollow()
+            follow()
         except:
             pass
+        
 
-        for i in range(self.break_count):
-            for i in range(self.follow_count):
-                print("trying   {}/{}      ".format(self.follow_count, i))
+        for i in range(self.follow_count):
+            print("trying   [ {}/{} ]     ".format(self.follow_count, i))
 
-                follow()
-                unfollow()
-            print("Tryed loop  {}/{}      ".format(self.break_count, i))
-            self.delay(self.break_time_delay)
+            unfollow()
+            follow()
             
-            
+
 
     @staticmethod
     def delay(delay:int):
         for i in range(delay, 0, -1):
-            print("waiting for [{}]  ".format(str(i)), end="\r")
             time.sleep(1)
+            print("waiting for [{}]  ".format(str(i)), end="\r")
 
-
-
-    
-
-    
 
     
 if __name__ == "__main__":
     person = Insta_automate(input("Username : "), getpass.getpass())
-    person.hack_with_foll_unfoll("cristiano")
+    for j in range(10):
+        person.hack_with_foll_unfoll("cristiano")
+        person.hack_with_foll_unfoll("kyliejenner")
+        print("THE MAIN LOOP COUNT  >  ", j)
+        person.delay(500)
+
